@@ -1,0 +1,11 @@
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj/Debug/netcoreapp2.1/PacMan-Conv.csprojAssemblyReference.cache
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj/Debug/netcoreapp2.1/PacMan-Conv.csproj.CoreCompileInputs.cache
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj/Debug/netcoreapp2.1/PacMan-Conv.AssemblyInfoInputs.cache
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj/Debug/netcoreapp2.1/PacMan-Conv.AssemblyInfo.cs
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/bin/Debug/netcoreapp2.1/PacMan-Conv.deps.json
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/bin/Debug/netcoreapp2.1/PacMan-Conv.runtimeconfig.json
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/bin/Debug/netcoreapp2.1/PacMan-Conv.runtimeconfig.dev.json
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/bin/Debug/netcoreapp2.1/PacMan-Conv.dll
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/bin/Debug/netcoreapp2.1/PacMan-Conv.pdb
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj/Debug/netcoreapp2.1/PacMan-Conv.dll
+/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj/Debug/netcoreapp2.1/PacMan-Conv.pdb
