@@ -5,9 +5,22 @@ using PacMan_Conv.Activations;
 
 namespace PacMan_Conv.Network.Layers {
     public class ConvolutionLayer : Layer {
+        /// <summary>
+        /// Filter: all weight matrices are in there
+        /// LastOutput: last calculated output -> for backprop
+        /// LastInput: last input to calculate -> for backprop
+        /// </summary>
         public Matrix<double>[] Filter, Last_Output, Last_Input;
         public double[] Bias;
+        /// <summary>
+        /// Kernel: size of the kernel
+        /// Channels: number of inputs accepted
+        /// Features: number of outputs
+        /// </summary>
         public int Kernel, Channels, Features;
+        /// <summary>
+        /// Activation -> example: sigmoid, leakyReLu
+        /// </summary>
         public Activation Activation;
 
         public ConvolutionLayer(int channels, int features, int kernel, Activation activation) {
@@ -37,7 +50,6 @@ namespace PacMan_Conv.Network.Layers {
                 }
                 results[feat].Map(Activation.Activate, results[feat]);
             }
-            
             Last_Output = results;
             return results;
         }
@@ -49,7 +61,7 @@ namespace PacMan_Conv.Network.Layers {
             for (int feat = 0; feat < Features; feat++) {
                 var m = Last_Output[feat];
                 derivativeo[feat] = new DenseMatrix(m.RowCount,m.ColumnCount);
-                m.Map(Activation.DeActivate, derivativeo[feat]);
+                m.Map(Activation.Derivative, derivativeo[feat]);
 
                 for (int chan = 0; chan < Channels; chan++) {
                     if (result_errors[chan] == null) result_errors[chan] = DenseMatrix.Create(Last_Input[0].RowCount * Last_Input[0].ColumnCount, 1, 0);

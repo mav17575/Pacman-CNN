@@ -5,9 +5,22 @@ using PacMan_Conv.Activations;
 
 namespace PacMan_Conv.Network.Layers {
     public class DenseLayer : Layer {
+        /// <summary>
+        /// LastOutput: last calculated output -> for backprop
+        /// LastInput: last input to calculate -> for backprop
+        /// </summary>
         Matrix<double> Weight, Bias, Last_Output, Last_Input;
+        /// <summary>
+        /// Activation -> example: sigmoid, leakyReLu
+        /// </summary>
         readonly Activation Activation;
+        /// <summary>
+        /// needed to bring error matrices and output matrices in the right form to calculate
+        /// </summary>
         readonly bool IsInputConvolution;
+        /// <summary>
+        /// variables needed for backprop
+        /// </summary>
         int Channels, SizeRows, SizeColumns;
 
         public DenseLayer(int input_size, int output_size, Activation activation_function, bool isInputConvoltion) {
@@ -28,7 +41,7 @@ namespace PacMan_Conv.Network.Layers {
         }
 
         public override Matrix<double>[] Backpropagate(Matrix<double>[] error, double lnr) {
-            var gradient = error[0].PointwiseMultiply(Last_Output.Map(Activation.DeActivate)) * lnr;
+            var gradient = error[0].PointwiseMultiply(Last_Output.Map(Activation.Derivative)) * lnr;
 
             error[0] = Weight.Transpose() * error[0];
 
@@ -40,6 +53,11 @@ namespace PacMan_Conv.Network.Layers {
             return error;
         }
 
+        /// <summary>
+        /// brings the input from a convolution layer in the right form to calculate in a denselayer
+        /// </summary>
+        /// <returns>input as vector</returns>
+        /// <param name="input">input as matrix</param>
         Matrix<double>[] ToVectorInput(Matrix<double>[] input) {
             Channels = input.Length;
             Matrix<double>[] result = new Matrix<double>[1];
