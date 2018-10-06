@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using PacMan_Conv.Layers;
+using PacMan_Conv.Network.Layers;
 
 namespace PacMan_Conv
 {
@@ -13,62 +13,21 @@ namespace PacMan_Conv
         {
             MathNet.Numerics.Control.UseMultiThreading();
 
+            var m = DenseMatrix.Create(2, 2, 1);
+            m[1, 1] = 100;
+            var input = new Matrix<double>[] { m };
 
-            /*var input = new Matrix<double>[] { DenseMatrix.Create(4, 4, 1), DenseMatrix.Create(4, 4, 1), DenseMatrix.Create(4, 4, 1) };
-
-            var convlayer = new Layers.ConvolutionLayer(3, 2, 2);
-            var convlayer2 = new Layers.ConvolutionLayer(2, 1, 2);
-
-            var res = convlayer.propagate(input);
-            res = convlayer2.propagate(res);
-
-            Console.WriteLine(res[0]);
-
-            for (int a = 0; a < 100; a++)
-            {
-                var error = new Matrix<double>[] { DenseMatrix.Create(4, 1, (DenseMatrix.Create(2, 2, 1) - res[0])[0, 0]) };
-
-                error = convlayer2.backward(error, 0.0001);
-                error = convlayer.backward(error, 0.0001);
-
-                res = convlayer.propagate(input);
-                res = convlayer2.propagate(res);
-
-                Console.WriteLine(res[0]);
-            }*/
-
-
-            var input_wert = GetPixelsGray(new Bitmap("/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/dog.jpg"));
-
-            var input = new Matrix<double>[] { input_wert, input_wert, input_wert };
-
-            var convLayer1 = new ConvolutionLayer(3, 6, 5);
-            var convLayer2 = new ConvolutionLayer(6, 12, 3);
-            var convLayer3 = new ConvolutionLayer(12, 16, 3);
+            MaxPoolingLayer layer = new MaxPoolingLayer(2);
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            input = convLayer1.propagate(input);
-            input = convLayer2.propagate(input);
-            input = convLayer3.propagate(input);
+            var result = layer.Propagate(input);
+            var backward_result = layer.Backpropagate(new Matrix<double>[] { DenseMatrix.Create(1, 1, -0.5) }, 0.001);
             watch.Stop();
             Console.WriteLine(watch.ElapsedMilliseconds);
+            Console.WriteLine(result[0]);
+            Console.WriteLine(backward_result[0]);
 
-            /*Stopwatch watch = new Stopwatch();
-            watch.Start();
-            Console.WriteLine(input[0]);
-            for (int a = 0; a < 10; a++)
-            {
-                var result = convlayer.propagate(input);
-                var error = new Matrix<double>[] { DenseMatrix.Create(4, 1, (DenseMatrix.Create(2, 2, 1) - result[0])[0, 0]), DenseMatrix.Create(4, 1, (DenseMatrix.Create(2, 2, 1) - result[1])[0, 0]) };
-                convlayer.backward(error, 0.01);
-                Console.WriteLine("Result 1");
-                Console.WriteLine(result[0]);
-                Console.WriteLine("Result 2");
-                Console.WriteLine(result[1]);
-            }
-            watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);*/
         }
 
         public static Matrix<double> GetPixelsGray(Bitmap img)

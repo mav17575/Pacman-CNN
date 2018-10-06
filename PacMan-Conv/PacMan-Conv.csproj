@@ -11,7 +11,9 @@
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Layers\" />
     <Folder Include="Activations\" />
+    <Folder Include="Network\" />
+    <Folder Include="Network\Layers\" />
+    <Folder Include="LossFunctions\" />
   </ItemGroup>
 </Project>
