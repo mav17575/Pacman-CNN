@@ -1,16 +1,15 @@
 ﻿<Properties StartupConfiguration="{9AE5F5E7-4CC3-4E44-AE4E-375D56EBA995}|Default" GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workbench ActiveDocument="PacMan-Conv Status">
     <Files>
-      <File FileName="PacMan-Conv/Program.cs" Line="21" Column="13" />
-      <File FileName="PacMan-Conv/Activations/Activation.cs" Line="5" Column="1" />
-      <File FileName="PacMan-Conv/Activations/Sigmoid.cs" Line="10" Column="32" />
-      <File FileName="PacMan-Conv/LossFunctions/LossFunction.cs" Line="1" Column="1" />
-      <File FileName="PacMan-Conv/LossFunctions/MeanSquaredError.cs" Line="1" Column="1" />
-      <File FileName="PacMan-Conv/Network/Layers/ConvolutionLayer.cs" Line="1" Column="1" />
-      <File FileName="PacMan-Conv/Network/Layers/DenseLayer.cs" Line="1" Column="1" />
-      <File FileName="PacMan-Conv/Network/Layers/Layer.cs" Line="1" Column="1" />
-      <File FileName="PacMan-Conv/Network/Layers/MaxPoolingLayer.cs" Line="1" Column="1" />
-      <File FileName="PacMan-Conv/Network/Network.cs" Line="1" Column="1" />
+      <File FileName="PacMan-Conv/Program.cs" Line="32" Column="70" />
+      <File FileName="PacMan-Conv/Network/Network.cs" Line="39" Column="1" />
+      <File FileName="PacMan-Conv/Network/Layers/Layer.cs" Line="6" Column="18" />
+      <File FileName="PacMan-Conv/Network/Layers/ConvolutionLayer.cs" Line="70" Column="17" />
+      <File FileName="PacMan-Conv/Network/Layers/DenseLayer.cs" Line="42" Column="1" />
+      <File FileName="PacMan-Conv/Activations/Activation.cs" Line="4" Column="18" />
+      <File FileName="PacMan-Conv/Activations/LeakyReLu.cs" Line="5" Column="18" />
+      <File FileName="PacMan-Conv/Activations/Sigmoid.cs" Line="3" Column="19" />
+      <File FileName="PacMan-Conv/Network/Layers/MaxPoolingLayer.cs" Line="14" Column="34" />
       <File FileName="PacMan-Conv Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>

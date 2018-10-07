@@ -2,12 +2,28 @@
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.Distributions;
 using PacMan_Conv.Activations;
+using System;
+using System.Diagnostics;
 
 namespace PacMan_Conv.Network.Layers {
+    [Serializable]
     public class ConvolutionLayer : Layer {
+        /// <summary>
+        /// Filter: all weight matrices are in there
+        /// LastOutput: last calculated output -> for backprop
+        /// LastInput: last input to calculate -> for backprop
+        /// </summary>
         public Matrix<double>[] Filter, Last_Output, Last_Input;
         public double[] Bias;
+        /// <summary>
+        /// Kernel: size of the kernel
+        /// Channels: number of inputs accepted
+        /// Features: number of outputs
+        /// </summary>
         public int Kernel, Channels, Features;
+        /// <summary>
+        /// Activation -> example: sigmoid, leakyReLu
+        /// </summary>
         public Activation Activation;
 
         public ConvolutionLayer(int channels, int features, int kernel, Activation activation) {
@@ -24,6 +40,8 @@ namespace PacMan_Conv.Network.Layers {
         }
 
         public override Matrix<double>[] Propagate(Matrix<double>[] input) {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
             Last_Input = input;
             var results = new Matrix<double>[Features];
             for (int feat = 0; feat < Features; feat++) {
@@ -37,7 +55,9 @@ namespace PacMan_Conv.Network.Layers {
                 }
                 results[feat].Map(Activation.Activate, results[feat]);
             }
-            
+            watch.Stop();
+            Console.WriteLine("ConvolutionLayer; Calculation:" + watch.ElapsedMilliseconds + "ms");
+            watch.Reset();
             Last_Output = results;
             return results;
         }
@@ -47,9 +67,10 @@ namespace PacMan_Conv.Network.Layers {
             var result_errors = new Matrix<double>[Channels];
             var derivativeo = new Matrix<double>[Features];
             for (int feat = 0; feat < Features; feat++) {
+                error[feat].Map(Activation.Derivative);
                 var m = Last_Output[feat];
                 derivativeo[feat] = new DenseMatrix(m.RowCount,m.ColumnCount);
-                m.Map(Activation.DeActivate, derivativeo[feat]);
+                m.Map(Activation.Derivative, derivativeo[feat]);
 
                 for (int chan = 0; chan < Channels; chan++) {
                     if (result_errors[chan] == null) result_errors[chan] = DenseMatrix.Create(Last_Input[0].RowCount * Last_Input[0].ColumnCount, 1, 0);

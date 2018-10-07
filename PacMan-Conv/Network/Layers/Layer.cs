@@ -3,6 +3,8 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace PacMan_Conv.Network.Layers {
+    [Serializable]
+    //structure for all layers
     abstract public class Layer {
         public static Random Random = new Random();
 
