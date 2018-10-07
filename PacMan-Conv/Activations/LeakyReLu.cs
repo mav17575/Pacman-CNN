@@ -1,6 +1,5 @@
-﻿
-using System;
-
+﻿using System;
+    
 namespace PacMan_Conv.Activations {
     [Serializable]
     public class LeakyReLu : Activation {
