@@ -11,6 +11,12 @@
           "lib/netstandard2.0/MathNet.Numerics.dll": {}
         }
       },
+      "MathNet.Numerics.MKL.Win-x64/2.3.0": {
+        "type": "package",
+        "build": {
+          "build/MathNet.Numerics.MKL.Win-x64.targets": {}
+        }
+      },
       "Microsoft.NETCore.App/2.1.0": {
         "type": "package",
         "dependencies": {
@@ -277,6 +283,20 @@
         "lib/netstandard2.0/MathNet.Numerics.xml",
         "mathnet.numerics.4.5.1.nupkg.sha512",
         "mathnet.numerics.nuspec"
+      ]
+    },
+    "MathNet.Numerics.MKL.Win-x64/2.3.0": {
+      "sha512": "2SEKtOW1CeHAuQ0RzqM5vHgo+UDGvixGtXhvY/wJXzFabCrTIsRQVy6bxRXtw0Y34gAiZFl+KwfPGN3PESj03A==",
+      "type": "package",
+      "path": "mathnet.numerics.mkl.win-x64/2.3.0",
+      "files": [
+        "build/MathNet.Numerics.MKL.Win-x64.targets",
+        "build/x64/MathNet.Numerics.MKL.dll",
+        "build/x64/libiomp5md.dll",
+        "license.txt",
+        "mathnet.numerics.mkl.win-x64.2.3.0.nupkg.sha512",
+        "mathnet.numerics.mkl.win-x64.nuspec",
+        "readme.txt"
       ]
     },
     "Microsoft.NETCore.App/2.1.0": {
@@ -797,33 +817,36 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "MathNet.Numerics >= 4.5.1",
+      "MathNet.Numerics.MKL.Win-x64 >= 2.3.0",
       "Microsoft.NETCore.App >= 2.1.0",
       "System.Drawing.Common >= 4.5.1"
     ]
   },
   "packageFolders": {
-    "/Users/timoluick/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\Granit\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/PacMan-Conv.csproj",
+      "projectUniqueName": "C:\\Users\\Granit\\Source\\Repos\\CNN\\PacMan-Conv\\PacMan-Conv.csproj",
       "projectName": "PacMan-Conv",
-      "projectPath": "/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/PacMan-Conv.csproj",
-      "packagesPath": "/Users/timoluick/.nuget/packages/",
-      "outputPath": "/Users/timoluick/Projects/PacMan-Conv/PacMan-Conv/obj",
+      "projectPath": "C:\\Users\\Granit\\Source\\Repos\\CNN\\PacMan-Conv\\PacMan-Conv.csproj",
+      "packagesPath": "C:\\Users\\Granit\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Granit\\Source\\Repos\\CNN\\PacMan-Conv\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/timoluick/.config/NuGet/NuGet.Config"
+        "C:\\Users\\Granit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -842,17 +865,20 @@
         "dependencies": {
           "MathNet.Numerics": {
             "target": "Package",
-            "version": "4.5.1"
+            "version": "[4.5.1, )"
+          },
+          "MathNet.Numerics.MKL.Win-x64": {
+            "target": "Package",
+            "version": "[2.3.0, )"
+          },
+          "Microsoft.NETCore.App": {
+            "target": "Package",
+            "version": "[2.1.0, )",
+            "autoReferenced": true
           },
           "System.Drawing.Common": {
             "target": "Package",
-            "version": "4.5.1"
-          },
-          "Microsoft.NETCore.App": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "2.1.0",
-            "autoReferenced": true
+            "version": "[4.5.1, )"
           }
         },
         "imports": [
