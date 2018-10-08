@@ -45,7 +45,7 @@ namespace PacMan_Conv {
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            for (int a = 0; a < 10; a++) {
+            for (int a = 0; a < 60; a++) {
                 Stopwatch wat = new Stopwatch();
                 wat.Start();
                 var result = network.Propagate(input);
@@ -57,11 +57,11 @@ namespace PacMan_Conv {
                 Console.WriteLine("");
                 wat.Restart();
                 wat.Start();
-                var backward_result = network.Backpropagate(network.Target.Target(new Matrix<double>[] { DenseMatrix.Create(1, 1, 1) }, result), 0.00001);
+                var backward_result = network.Backpropagate(network.Target.Target(new Matrix<double>[] { DenseMatrix.Create(1, 1, 1) }, result), 0.001);
                 wat.Stop();
                 Console.WriteLine("Time Backpropagate: " + wat.ElapsedMilliseconds + "ms");
                 Console.WriteLine("-----------------------------");
-                ImgUtil.ConvertToBitmap(c2.Last_Output[2], c2.Last_Output[2].ColumnCount, c2.Last_Output[2].RowCount,"t"+a,"Sigmoid");
+                ImgUtil.ConvertToBitmap(c1.Last_Output[2], c1.Last_Output[2].ColumnCount, c1.Last_Output[2].RowCount,"t"+a,"Sigmoid");
             }
             watch.Stop();
             Console.WriteLine(watch.ElapsedMilliseconds);

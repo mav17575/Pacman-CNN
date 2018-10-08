@@ -78,11 +78,12 @@ namespace PacMan_Conv.NeuralNetwork.Layers
             {
                 var m = Last_Output[feat];
                 derivativeo[feat] = m.Map(Activation.Derivative);
+                Matrix<double> g = error[feat].PointwiseMultiply(new DenseMatrix(derivativeo[feat].RowCount * derivativeo[feat].ColumnCount, 1, derivativeo[feat].AsColumnMajorArray()));
 
                 for (int chan = 0; chan < Channels; chan++)
                 {
                     if (result_errors[chan] == null) result_errors[chan] = DenseMatrix.Create(Last_Input[0].RowCount * Last_Input[0].ColumnCount, 1, 0);
-                   // Bias[feat * Channels + chan] += error[feat].ColumnSums().Sum() * lnr;
+                    Bias[feat * Channels + chan] += g.ColumnSums().Sum() * lnr;
                     for (int kx = 0; kx < Kernel; kx++)
                         for (int ky = 0; ky < Kernel; ky++)
                         {
@@ -90,13 +91,10 @@ namespace PacMan_Conv.NeuralNetwork.Layers
                             for (int x = 0; x < Last_Input[chan].RowCount; x++)
                                 for (int y = 0; y < Last_Input[chan].ColumnCount; y++)
                                 {
-                                    //dero koennte falsch sein
                                     //Sachen die wiederverwendet werden in variablen speichern
-                                    double dero = derivativeo[feat][(ky+y)/Kernel, (kx + x) / Kernel];
-                                    Bias[feat * Channels + chan] += error[feat][ky * Kernel + kx, 0]*dero;
-                                    result_errors[chan][x * Last_Input[chan].ColumnCount + y, 0] += Filter[feat * Channels + chan][0,(Kernel - kx - 1)*Kernel+(Kernel - ky - 1)] * error[feat][ky * Kernel + kx, 0]*dero;
+                                    result_errors[chan][x * Last_Input[chan].ColumnCount + y, 0] += Filter[feat * Channels + chan][0,(Kernel - kx - 1)*Kernel+(Kernel - ky - 1)] * g[kx * Kernel + ky, 0];
                                     if (y < Last_Input[chan].ColumnCount - (Kernel - 1) && x < Last_Input[chan].RowCount - (Kernel - 1))
-                                        delta_kxy += Last_Input[chan][x + kx, y + ky] * error[feat][ky * Kernel + kx, 0] * dero*lnr;
+                                        delta_kxy += Last_Input[chan][x + kx, y + ky] * g[kx * Kernel + ky, 0] *lnr;
                                 }
                             Filter[feat * Channels + chan][0,kx*Kernel + ky] += delta_kxy;
                         }
