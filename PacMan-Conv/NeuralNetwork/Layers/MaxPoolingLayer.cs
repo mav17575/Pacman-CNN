@@ -15,7 +15,7 @@ namespace PacMan_Conv.NeuralNetwork.Layers {
         }
 
         public override Matrix<double>[] Propagate(Matrix<double>[] input) {
-            LastInput = input;
+            LastInput = new Matrix<double>[input.Length];
             InputRowSize = input[0].RowCount;
             InputColumnSize = input[0].ColumnCount;
 

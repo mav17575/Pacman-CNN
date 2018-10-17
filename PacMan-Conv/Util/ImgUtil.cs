@@ -85,7 +85,7 @@ namespace PacMan_Conv
         {
             Bitmap conv = new Bitmap(w, h);
             SetPixels(conv, m, activation);
-            conv.Save(filename+ ".png", ImageFormat.Png);
+            conv.Save(filename);
             return conv;
         }
 

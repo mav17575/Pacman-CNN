@@ -29,6 +29,7 @@ namespace PacMan_Conv.NeuralNetwork.Layers
         public int Lastkx,Lastky;
         public Activation Activation;
 
+
         public ConvolutionLayer(int channels, int features, int kernel, Activation activation)
         {
             this.Channels = channels;
@@ -38,7 +39,6 @@ namespace PacMan_Conv.NeuralNetwork.Layers
             Bias = new double[Features * Channels];
             for (int i = 0; i < features * channels; i++)
             {
-                //Filter[i] = DenseMatrix.CreateRandom(kernel, kernel, RandomUtil.UnitUniform);
                 Filter[i] = DenseMatrix.CreateRandom(1, kernel * kernel, RandomUtil.UnitUniform);
                 Bias[i] = RandomUtil.NormalRandom.NextDouble() * 2 - 1;
             }
@@ -47,10 +47,12 @@ namespace PacMan_Conv.NeuralNetwork.Layers
 
         public override Matrix<double>[] Propagate(Matrix<double>[] input)
         {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            Lastkx = input[0].ColumnCount - Kernel + 1;
+            Lastky = input[0].RowCount - Kernel + 1;
+            //Stopwatch watch = new Stopwatch();
+            //watch.Start();
             Last_Input = input;
-            Matrix<double>[] conv = IConvolute(input);
+            Matrix<double>[] conv = ApplyKernel(input);
             var results = new Matrix<double>[Features];
             for (int feat = 0; feat < Features; feat++)
             {
@@ -62,84 +64,72 @@ namespace PacMan_Conv.NeuralNetwork.Layers
                 results[feat].Map(Activation.Activate, results[feat]);
                 results[feat] = new DenseMatrix(Lastkx,Lastky,results[feat].AsColumnMajorArray()).Transpose();
             }
-            watch.Stop();
-            Console.WriteLine("ConvolutionLayer; Calculation:" + watch.ElapsedMilliseconds + "ms");
-            watch.Reset();
+            //watch.Stop();
+            //Console.WriteLine("ConvolutionLayer; Calculation:" + watch.ElapsedMilliseconds + "ms");
+            //watch.Reset();
             Last_Output = results;
             return results;
         }
 
 
-        public override Matrix<double>[] Backpropagate(Matrix<double>[] error, double lnr)
-        {
+        public override Matrix<double>[] Backpropagate(Matrix<double>[] error, double lnr)  {
             var result_errors = new Matrix<double>[Channels];
-            var derivativeo = new Matrix<double>[Features];
-            for (int feat = 0; feat < Features; feat++)
-            {
-                var m = Last_Output[feat];
-                derivativeo[feat] = m.Map(Activation.Derivative);
-                Matrix<double> g = error[feat].PointwiseMultiply(new DenseMatrix(derivativeo[feat].RowCount * derivativeo[feat].ColumnCount, 1, derivativeo[feat].AsColumnMajorArray()));
+            var derivative = new Matrix<double>[Features];
+            for (int feat = 0; feat < Features; feat++) {
+                derivative[feat] = Last_Output[feat].Map(Activation.Derivative);
+                Matrix<double> g = error[feat].PointwiseMultiply(new DenseMatrix(derivative[feat].RowCount * derivative[feat].ColumnCount, 1, derivative[feat].AsColumnMajorArray()));
 
-                for (int chan = 0; chan < Channels; chan++)
-                {
+                for (int chan = 0; chan < Channels; chan++) {
                     if (result_errors[chan] == null) result_errors[chan] = DenseMatrix.Create(Last_Input[0].RowCount * Last_Input[0].ColumnCount, 1, 0);
                     Bias[feat * Channels + chan] += g.ColumnSums().Sum() * lnr;
-                    for (int kx = 0; kx < Kernel; kx++)
-                        for (int ky = 0; ky < Kernel; ky++)
-                        {
+                    for (int kx = 0; kx < Kernel; kx++) {
+                        for (int ky = 0; ky < Kernel; ky++) {
+                            int errorIndex = 0;
                             double delta_kxy = 0;
                             for (int x = 0; x < Last_Input[chan].RowCount; x++)
-                                for (int y = 0; y < Last_Input[chan].ColumnCount; y++)
-                                {
-                                    //Sachen die wiederverwendet werden in variablen speichern
-                                    result_errors[chan][x * Last_Input[chan].ColumnCount + y, 0] += Filter[feat * Channels + chan][0,(Kernel - kx - 1)*Kernel+(Kernel - ky - 1)] * g[kx * Kernel + ky, 0];
+                                for (int y = 0; y < Last_Input[chan].ColumnCount; y++) {
+                                    if (x - kx >= 0 && y - ky >= 0 && x + (Kernel - kx) < Last_Input[chan].RowCount && y + (Kernel - ky) < Last_Input[chan].ColumnCount) {
+                                        result_errors[chan][x * Last_Input[chan].ColumnCount + y, 0] += Filter[feat * Channels + chan][0, (Kernel - kx - 1) * Kernel + (Kernel - ky - 1)] * g[errorIndex, 0];
+                                        errorIndex++;
+                                    }
                                     if (y < Last_Input[chan].ColumnCount - (Kernel - 1) && x < Last_Input[chan].RowCount - (Kernel - 1))
-                                        delta_kxy += Last_Input[chan][x + kx, y + ky] * g[kx * Kernel + ky, 0] *lnr;
+                                        delta_kxy += Last_Input[chan][x + kx, y + ky] * g[kx * Kernel + ky, 0] * lnr;
                                 }
-                            Filter[feat * Channels + chan][0,kx*Kernel + ky] += delta_kxy;
+                            Filter[feat * Channels + chan][0, kx * Kernel + ky] += delta_kxy;
                         }
+                    }
                 }
             }
             return result_errors;
         }
 
-        public Matrix<double>[] IConvolute(Matrix<double>[] m)
-        {
-            Lastkx = (m[0].ColumnCount - Kernel + 1);
-            Lastky = (m[0].RowCount - Kernel + 1);
-            Matrix[] conv = new Matrix[Channels];
-            ApplyKernel(conv, m, Lastkx, Lastky, Kernel, Kernel, Channels);
-            return conv;
-        }
+        public Matrix<double>[] ApplyKernel(Matrix<double>[] input) {
+            var result = new Matrix<double>[Channels];
 
-        public static void ApplyKernel(Matrix<double>[] conv, Matrix<double>[] inputs, int countx, int county, int kernelx, int kernely, int channels)
-        {
-            int kxm = kernelx - 1;
-            int r = kernelx * kernely;
+            int countx = input[0].ColumnCount - Kernel + 1;
+            int county = input[0].RowCount - Kernel + 1;
+
+            int kxm = Kernel - 1;
+            int r = Kernel * Kernel;
             int c = countx * county;
 
-            for (int z = 0; z < channels; z++)
-            {
-                conv[z] = new DenseMatrix(r, c);
-                for (int y = 0; y < county; y++)
-                {
-                    for (int x = 0; x < countx; x++)
-                    {
+            for (int chan = 0; chan < Channels; chan++) {
+                result[chan] = new DenseMatrix(r, c);
+                for (int y = 0; y < county; y++) {
+                    for (int x = 0; x < countx; x++) {
                         int offx = 0;
                         int i = x + (y * countx);
-                        for (int ky = 0; ky < kernely; ky++)
-                        {
+                        for (int ky = 0; ky < Kernel; ky++) {
                             int kfy = ky + offx;
                             int yky = y + ky;
-                            for (int kx = 0; kx < kernelx; kx++)
-                            {
-                                conv[z][kfy + kx, i] += inputs[z].At(yky, x + kx);
-                            }
+                            for (int kx = 0; kx < Kernel; kx++)
+                                result[chan][kfy + kx, i] += input[chan][yky, x + kx];
                             offx += kxm;
                         }
                     }
                 }
             }
+            return result;
         }
     }
 }

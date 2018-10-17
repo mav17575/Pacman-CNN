@@ -34,16 +34,16 @@ namespace PacMan_Conv.NeuralNetwork.Layers {
         }
 
         public override Matrix<double>[] Propagate(Matrix<double>[] input) {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            //Stopwatch watch = new Stopwatch();
+            //watch.Start();
             if (IsInputConvolution)
                 input = ToVectorInput(input);
             Last_Input = input[0];
             input[0] =  Weight * input[0] + Bias;
             input[0] = input[0].Map(Activation.Activate);
             Last_Output = input[0];
-            watch.Stop();
-            Console.WriteLine("Denselayer; Calculation:" + watch.ElapsedMilliseconds + "ms");
+            //watch.Stop();
+            //Console.WriteLine("Denselayer; Calculation:" + watch.ElapsedMilliseconds + "ms");
             return new Matrix<double>[] { input[0] };
         }
 
